@@ -19,7 +19,7 @@ substitutions:
 ### Option 1 (remote): use remote_package from GitHub. Comment out Option 2 when using this.
 packages:
   remote_package:
-    url: https://github.com/pletch/clack-reader-v4
+    url: https://github.com/fonske/clack-reader-v4
     ref: ws1_usa
     files:
       - esphome/clack_ws1_usa/.clack-labels-en.yaml
