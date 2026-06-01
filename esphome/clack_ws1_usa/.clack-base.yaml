@@ -3,9 +3,16 @@ esphome:
   name: ${name}
   friendly_name: ${friendly_name}
   on_boot:
-    priority: -100
-    then:
-      - script.execute: on_boot
+    # Publish restored watermeter total BEFORE API connects to HA (API connects at priority 200)
+    # so HA sees the correct initial value rather than a 0 blip.
+    - priority: 600
+      then:
+        - sensor.template.publish:
+            id: clack_watermeter
+            state: !lambda 'return id(totalWaterUsage);'
+    - priority: -100
+      then:
+        - script.execute: on_boot
 
 # Enable Home Assistant API
 api:
@@ -1325,8 +1332,9 @@ sensor:
     state_class: measurement
     internal_filter: 10ms
     internal_filter_mode: PULSE
-    timeout: 30s
+    timeout: 10s
     filters:
+      - throttle_average: 300ms
       - lambda: |-
           float ppg = id(pulse_per_gallon);
           return ppg > 0 ? x / ppg : 0.0f;
