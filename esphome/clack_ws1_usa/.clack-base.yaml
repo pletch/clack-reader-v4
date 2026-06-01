@@ -1316,73 +1316,8 @@ sensor:
 #------
 # CLACK
 #------
-  ##
-  #  Flow Rate
-  - platform: pulse_meter
-    pin:
-      number: GPIO7
-      mode:
-        input: true
-        pullup: true
-    id: clack_flow_rate
-    name: ${clack_flow_rate}
-    unit_of_measurement: gal/min
-    accuracy_decimals: 2
-    device_class: volume_flow_rate
-    state_class: measurement
-    internal_filter: 10ms
-    internal_filter_mode: PULSE
-    timeout: 10s
-    filters:
-      - throttle_average: 300ms
-      - lambda: |-
-          float ppg = id(pulse_per_gallon);
-          return ppg > 0 ? x / ppg : 0.0f;
-    total:
-      id: clack_pulse_total_raw
-      internal: true
-      on_value:
-        then:
-          - lambda: |-
-              static uint32_t last_total = 0;
-              uint32_t cur = (uint32_t) x;
-              uint32_t delta = cur - last_total;
-              last_total = cur;
-              float ppg = id(pulse_per_gallon);
-              if (!id(water_meter_freeze) && delta > 0 && ppg > 0) {
-                id(totalWaterUsage) += (float) delta / ppg;
-              }
-          - sensor.template.publish:
-              id: clack_watermeter
-              state: !lambda 'return id(totalWaterUsage);'
-
-
-  #  Watermeter
-  - platform: template
-    id: clack_watermeter
-    name: ${clack_watermeter_total}
-    icon: mdi:water
-    update_interval: ${watermeter_update_interval}
-    unit_of_measurement: gal
-    device_class: water
-    state_class: total_increasing
-    accuracy_decimals: 1
-    lambda: |-
-      return id(totalWaterUsage);
-    filters:
-      - throttle: 300ms
-    on_value:
-      - sensor.template.publish:
-          id: clack_g_left
-          state: !lambda |-
-            return float(id(clack_capacity_gallons).state - id(clack_watermeter).state);
-      - sensor.template.publish:
-          id: clack_percent_g_left
-          state: !lambda |-
-            if (id(clack_capacity_gallons).state <= 0) {
-            return 0;
-            }
-            return float((id(clack_g_left).state / id(clack_capacity_gallons).state) * 100);
+  # Flow rate (clack_flow_rate) and water meter total (clack_watermeter)
+  # live in clack_ws1_usa/.waterflow.yaml, included via packages: in clack.yaml.
 
   - platform: template
     id: clack_g_left

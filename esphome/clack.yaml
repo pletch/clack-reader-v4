@@ -25,6 +25,7 @@ packages:
       - esphome/clack_ws1_usa/.clack-labels-en.yaml
       - esphome/clack_ws1_usa/board-esp32-atom-s3.yaml
       - esphome/clack_ws1_usa/.clack-base.yaml
+      - esphome/clack_ws1_usa/.waterflow.yaml
       - esphome/clack_ws1_usa/.tof2.yaml
       - esphome/clack_ws1_usa/.clack-optional.yaml
     refresh: 1d
@@ -34,8 +35,9 @@ packages:
 #  substitutions: !include clack_ws1_usa/.clack-labels-en.yaml
 #  device_base1:  !include clack_ws1_usa/board-esp32-atom-s3.yaml
 #  device_base2:  !include clack_ws1_usa/.clack-base.yaml
-#  device_base3:  !include clack_ws1_usa/.tof2.yaml
-#  device_base4:  !include clack_ws1_usa/.clack-optional.yaml
+#  device_base3:  !include clack_ws1_usa/.waterflow.yaml
+#  device_base4:  !include clack_ws1_usa/.tof2.yaml
+#  device_base5:  !include clack_ws1_usa/.clack-optional.yaml
 
 time:
   - platform: homeassistant
